@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yolani Moloi | Stakeholder Relations Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- Global Styles --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body, html {
+            width: 100%;
+            height: 100%;
+            font-family: 'Poppins', sans-serif;
+            background-color: #121212; /* Dark grey/black background color */
+            color: #FFFFFF;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        /* --- Loading Screen Styles --- */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 9999;
+            transition: opacity 1s ease, visibility 1s ease;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #loading-screen video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* --- Section (Page) Styles for Single-Page Layout --- */
+        .page {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 120px 20px;
+            width: 100%;
+        }
+
+        #home-page {
+            height: 100vh;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .page-content {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            color: #FF69B4;
+            text-align: center;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            font-weight: 300;
+            color: #FFFFFF;
+            text-align: center;
+            margin-bottom: 60px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* --- Navigation Styles --- */
+        nav {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(18, 18, 18, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 10px 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+        }
+
+        .nav-links a {
+            color: #FF69B4;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 5px 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 30px;
+            background: linear-gradient(45deg, #FF69B4, #FF1493);
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+
+        .nav-links a:hover::before {
+            width: 110%;
+            height: 130%;
+            opacity: 1;
+        }
+
+        .nav-links a:hover {
+            color: #FFFFFF;
+        }
+
+        /* --- Home Page Styles --- */
+        #home-page .text-content {
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        .name {
+            font-size: 5.5rem;
+            font-weight: 400;
+            margin: 0;
+            letter-spacing: 2px;
+            font-family: 'Parisienne', cursive;
+            background: linear-gradient(to right, #FF69B4, #FFB6C1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
+        }
+
+        .description {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: #FFFFFF;
+            margin-top: 10px;
+            letter-spacing: 1px;
+            border-right: 2px solid #FF69B4;
+            white-space: nowrap;
+            overflow: hidden;
+            width: 0;
+            margin: 20px auto;
+        }
+
+        /* --- Bio Page Styles --- */
+        .bio-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .bio-image {
+            width: 100%;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .bio-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .bio-image:hover img {
+            transform: scale(1.03);
+        }
+
+        .bio-text h2 {
+            font-size: 2rem;
+            color: #FF69B4;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .bio-text h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(to right, #FF69B4, #FF1493);
+        }
+
+        .bio-text p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #E0E0E0;
+        }
+
+        .bio-highlights {
+            margin-top: 30px;
+            padding-left: 15px;
+        }
+
+        .highlight-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .highlight-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #FF69B4, #FF1493);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .highlight-icon i {
+            color: #FFFFFF;
+            font-size: 1.1rem;
+        }
+
+        .highlight-text {
+            font-size: 1.05rem;
+        }
+
+        /* --- Elevator Pitch Page Styles --- */
+        .pitch-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 105, 180, 0.2);
+        }
+
+        .pitch-video {
+            width: 100%;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 40px 0;
+            position: relative;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            background: linear-gradient(135deg, #2c2c2c, #1a1a1a);
+        }
+
+        .pitch-video-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #FF69B4;
+        }
+
+        .pitch-video-placeholder i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .pitch-cta {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #FF69B4, #FF1493);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 105, 180, 0.3);
+        }
+
+        /* --- Portfolio Page Styles --- */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+            justify-content: center; /* Centers grid items horizontally */
+        }
+
+        .portfolio-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(255, 105, 180, 0.2);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .portfolio-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .portfolio-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #2c2c2c, #1a1a1a);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #FF69B4;
+        }
+
+        .portfolio-image i {
+            font-size: 3.5rem;
+        }
+
+        .portfolio-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .portfolio-title {
+            font-size: 1.4rem;
+            color: #FF69B4;
+            margin-bottom: 10px;
+        }
+
+        .portfolio-desc {
+            font-size: 0.95rem;
+            color: #E0E0E0;
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+        
+        .portfolio-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(45deg, #FF69B4, #FF1493);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            text-align: center;
+            margin-top: auto;
+            transition: all 0.3s ease;
+        }
+
+        .portfolio-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(255, 105, 180, 0.25);
+        }
+
+        /* --- Contact Page Styles --- */
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            margin-top: 40px;
+        }
+
+        .contact-info {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(255, 105, 180, 0.2);
+        }
+
+        .contact-info h3 {
+            color: #FF69B4;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .contact-details {
+            margin-bottom: 30px;
+        }
+
+        .contact-detail {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .contact-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #FF69B4, #FF1493);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .contact-icon i {
+            color: #FFFFFF;
+            font-size: 1.2rem;
+        }
+
+        .contact-text {
+            font-size: 1.05rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-link {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FF69B4;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: linear-gradient(45deg, #FF69B4, #FF1493);
+            color: #FFFFFF;
+            transform: translateY(-3px);
+        }
+
+        .contact-form {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(255, 105, 180, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #FF69B4;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 105, 180, 0.3);
+            border-radius: 8px;
+            color: #FFFFFF;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            padding: 12px 30px;
+            background: linear-gradient(45deg, #FF69B4, #FF1493);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 105, 180, 0.3);
+        }
+
+        /* --- LinkedIn Icon Styles (Home Page Only) --- */
+        .linkedin-icon {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            z-index: 1000;
+        }
+
+        .linkedin-icon a {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: #FF69B4;
+            font-size: 1.8rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .linkedin-icon a:hover {
+            background: linear-gradient(45deg, #FF69B4, #FF1493);
+            color: #FFFFFF;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(255, 105, 180, 0.4);
+        }
+
+        /* --- Background Elements --- */
+        .bg-pink-circle, .bg-pink-circle-2 {
+            position: fixed;
+            border-radius: 50%;
+            z-index: -1;
+        }
+        .bg-pink-circle {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 105, 180, 0.2) 0%, rgba(255, 105, 180, 0) 70%);
+            top: -150px;
+            left: -150px;
+        }
+        .bg-pink-circle-2 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255, 105, 180, 0.15) 0%, rgba(255, 105, 180, 0) 70%);
+            bottom: -100px;
+            right: -100px;
+        }
+
+        /* --- Animation Keyframes --- */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 968px) {
+            .bio-content, .contact-container { grid-template-columns: 1fr; }
+            .section-title { font-size: 2.5rem; }
+            .name { font-size: 4.5rem; }
+            .portfolio-grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
+        }
+
+        @media (max-width: 768px) {
+            nav { top: 15px; right: 15px; left: auto; width: auto; padding: 8px; }
+            .nav-links { gap: 5px; justify-content: flex-end; }
+            .nav-links a { font-size: 0.8rem; padding: 5px 8px; }
+            .section-title { font-size: 2.2rem; }
+            .name { font-size: 4rem; }
+            .description { font-size: 1.2rem; }
+            .linkedin-icon { bottom: 20px; left: 20px; }
+            .pitch-container { padding: 25px; }
+        }
+
+        @media (max-width: 600px) {
+            nav { left: 15px; right: 15px; top: 15px; }
+            .nav-links { justify-content: center; flex-wrap: wrap; gap: 8px; }
+            .nav-links a { font-size: 0.8rem; padding: 4px 8px; }
+            .linkedin-icon a { width: 40px; height: 40px; font-size: 1.5rem; }
+            .page { padding: 90px 15px; }
+            .name { font-size: 3.5rem; }
+            .bio-highlights { padding-left: 5px; }
+            .highlight-icon { width: 32px; height: 32px; margin-right: 12px; }
+            .highlight-text { font-size: 1rem; }
+            .portfolio-grid { grid-template-columns: 1fr; }
+            .section-title { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div id="loading-screen">
+        <video autoplay muted loop playsinline>
+            <source src="loading_video.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <main>
+        <div class="bg-pink-circle"></div>
+        <div class="bg-pink-circle-2"></div>
+        
+        <nav>
+            <div class="nav-links">
+                <a href="#home-page" class="nav-link">Home</a>
+                <a href="#bio-page" class="nav-link">Bio</a>
+                <a href="#elevator-pitch-page" class="nav-link">Elevator Pitch</a>
+                <a href="#portfolio-page" class="nav-link">Portfolio</a>
+                <a href="#contact-page" class="nav-link">Contact</a>
+            </div>
+        </nav>
+
+        <section id="home-page" class="page">
+            <div class="text-content">
+                <h1 class="name">Yolani Moloi</h1>
+                <p class="description"></p>
+            </div>
+            <div class="linkedin-icon">
+                <a href="https://www.linkedin.com/in/rethabile-yolani-moloi-1a8a54322/" target="_blank" aria-label="LinkedIn">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+            </div>
+        </section>
+
+        <section id="bio-page" class="page">
+            <div class="page-content">
+                <h2 class="section-title">Professional Biography</h2>
+                <p class="section-subtitle">Get to know my journey and expertise in stakeholder relations management</p>
+                <div class="bio-content">
+                    <div class="bio-image">
+                        <img src="images/rea_bio.jpeg" alt="Yolani Moloi">
+                    </div>
+                    <div class="bio-text">
+                        <h2>About Me</h2>
+                        <p>I am a Stakeholder Relations Manager with experience building meaningful connections and driving collaboration across diverse teams. I specialize in aligning business objectives with stakeholder needs to create long-term, impactful partnerships.</p>
+                        <p>Currently, I am expanding my expertise into Data Science, focusing on leveraging data to uncover insights, inform strategic decisions, and drive innovation. My goal is to combine my relationship management skills with technical knowledge to deliver solutions that create real business value.</p>
+                        <p>I am passionate about continuous learning, problem-solving, and using technology to improve processes and decision-making. I enjoy contributing to projects that connect people, data, and strategy in meaningful ways.</p>
+                        <div class="bio-highlights">
+                            <div class="highlight-item">
+                                <div class="highlight-icon"><i class="fas fa-graduation-cap"></i></div>
+                                <div class="highlight-text">Pathways Learner, ALX Africa</div>
+                            </div>
+                            <div class="highlight-item">
+                                <div class="highlight-icon"><i class="fas fa-award"></i></div>
+                                <div class="highlight-text">Certified Stakeholder Relationship Manager (CSRM)</div>
+                            </div>
+                            <div class="highlight-item">
+                                <div class="highlight-icon"><i class="fas fa-globe"></i></div>
+                                <div class="highlight-text">Worked with Multiple organisations across south africa</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="elevator-pitch-page" class="page">
+            <div class="page-content">
+                <h2 class="section-title">Elevator Pitch</h2>
+                <p class="section-subtitle">A brief overview of my value proposition and professional approach</p>
+                <div class="pitch-container">
+                    <div class="pitch-video">
+                        <div class="pitch-video-placeholder">
+                            <i class="fas fa-play-circle"></i>
+                            <p>Elevator Pitch Video Coming Soon</p>
+                        </div>
+                    </div>
+                    <div class="pitch-cta">
+                        <a href="https://www.linkedin.com/in/rethabile-yolani-moloi-1a8a54322/" target="_blank" class="cta-button">Let's Connect</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="portfolio-page" class="page">
+            <div class="page-content">
+                <h2 class="section-title">Portfolio</h2>
+                <p class="section-subtitle">A selection of my work and achievements in stakeholder relations</p>
+                <div class="portfolio-grid">
+                    <div class="portfolio-item">
+                        <div class="portfolio-image"><i class="fas fa-file-powerpoint"></i></div>
+                        <div class="portfolio-content">
+                            <h3 class="portfolio-title">Zonify Smarter Cities App</h3>
+                            <p class="portfolio-desc">Zonify is an urban intelligence platform that empowers users to analyze land readiness, zoning conditions, and surrounding infrastructure, all in one interactive interface. Built for planners, developers, and citizens alike.</p>
+                            <a href="https://www.canva.com/design/DAGswTSUgGU/DqSTq6RzolFbXN5tmeK7vg/view" target="_blank" class="portfolio-button">Click Here to View</a>
+                        </div>
+                    </div>
+                    <div class="portfolio-item">
+                        <div class="portfolio-image"><i class="fab fa-youtube"></i></div>
+                        <div class="portfolio-content">
+                            <h3 class="portfolio-title">Video Presentation</h3>
+                            <p class="portfolio-desc">A video presentation outlining the key features and value proposition of the Zonify Smarter Cities application.</p>
+                            <a href="https://youtu.be/CqvZCCLHAoI?si=01qEg23t_TRLLTF0" target="_blank" class="portfolio-button">Click Here to Watch</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact-page" class="page">
+            <div class="page-content">
+                <h2 class="section-title">Get In Touch</h2>
+                <p class="section-subtitle">Let's discuss how I can help your organization build stronger stakeholder relationships</p>
+                <div class="contact-container">
+                    <div class="contact-info">
+                        <h3>Contact Information</h3>
+                        <div class="contact-details">
+                            <div class="contact-detail">
+                                <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                                <div class="contact-text">rethabileyolanimoloi@gmail.com</div>
+                            </div>
+                            <div class="contact-detail">
+                                <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+                                <div class="contact-text">Johannesburg, South Africa</div>
+                            </div>
+                        </div>
+                        <h3>Connect With Me</h3>
+                        <div class="social-links">
+                            <a href="https://www.linkedin.com/in/rethabile-yolani-moloi-1a8a54322/" target="_blank" class="social-link">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="contact-form">
+                        <h3>Send a Message</h3>
+                        <form id="contactForm">
+                            <div class="form-group">
+                                <label for="name">Your Name</label>
+                                <input type="text" id="name" placeholder="Enter your name">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" placeholder="Enter your email">
+                            </div>
+                            <div class="form-group">
+                                <label for="subject">Subject</label>
+                                <input type="text" id="subject" placeholder="What is this regarding?">
+                            </div>
+                            <div class="form-group">
+                                <label for="message">Your Message</label>
+                                <textarea id="message" placeholder="How can I help you?"></textarea>
+                            </div>
+                            <button type="submit" class="submit-btn">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Loading screen logic
+            const loadingScreen = document.getElementById('loading-screen');
+            window.addEventListener('load', () => {
+                loadingScreen.classList.add('hidden');
+            });
+
+            // Corrected Typing Effect
+            const descriptionElement = document.querySelector('.description');
+            if (descriptionElement) {
+                const text = 'stakeholder relations manager';
+                let index = 0;
+                const typingSpeed = 100;
+                descriptionElement.textContent = ''; // Clear initial text
+
+                function type() {
+                    if (index < text.length) {
+                        descriptionElement.textContent += text.charAt(index);
+                        descriptionElement.style.width = (index + 1) + 'ch';
+                        index++;
+                        setTimeout(type, typingSpeed);
+                    } else {
+                        setTimeout(() => {
+                            if (descriptionElement) {
+                                descriptionElement.style.borderRight = 'none';
+                            }
+                        }, 1000);
+                    }
+                }
+                setTimeout(type, 1000);
+            }
+
+            // --- Single-Page Smooth Scrolling ---
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const targetId = this.getAttribute('href');
+                    if (targetId && targetId.startsWith('#')) {
+                        e.preventDefault();
+                        const targetSection = document.querySelector(targetId);
+                        if (targetSection) {
+                            targetSection.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }
+                    }
+                });
+            });
+            
+            // --- Form submission ---
+            const contactForm = document.getElementById('contactForm');
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    alert('Thank you for your message! I will get back to you soon.');
+                    contactForm.reset();
+                });
+            }
+        });
+    </script>
+</body>
+</html>
